@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Load browser history data then reformat
 browser_raw = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\BrowserHistory.csv')
@@ -13,11 +15,13 @@ browser['time_usec'] = temporary[0]
 activity_raw = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\ProductAndServiceUsage.csv')
 activity = activity_raw.drop(labels=['EndDateTime', 'DeviceId', 'Aggregation', 'AppPublisher'], axis=1)
 activity['DateTime'] = activity['DateTime'].str.split(' ', expand=True)
+
 activity_date_list = activity['DateTime'].values.tolist()
 date_list = []
 for i in range(len(activity_date_list)):
     date = datetime.strptime(activity_date_list[i], '%m/%d/%Y')
     date_list.append(date)
+
 activity['Date'] = date_list
 activity = activity.drop(columns='DateTime')
 
@@ -39,15 +43,76 @@ for i in range(len(epoch_list)):
     temp = epoch_list[i]
     date = datetime.fromtimestamp(temp)
     date_list.append(date)
+
 browser['time_usec'] = date_list
 browser['Date'] = [d.date() for d in browser['time_usec']]
 browser = browser.drop(columns='time_usec')
 
-# Add column with day to both dataframes
-browser['Month'] = pd.to_datetime(browser['Date']).dt.day
-activity['Month'] = pd.to_datetime(activity['Date']).dt.day
-
 # Organize keywords for each dataframe
-browser_keywords = {1:'linkedin', 2:'mail', 3:'youtube', 4:'search', 5:'instagram', 6:'cibc', 7:'bmo', 8:'royalbank', 9:'netflix', 10:'twitch'}
-misc_browser_keywords = ['stat', 'panda', 'ipynb', 'science', 'udemy', 'algorithm', 'regression', 'data', 'machine', 'learning', 'stackoverflow', 'geeks', 'w3school', 'github', 'seaborn', 'matplotlib', 'kaggle', 'dev', 'kite', 'thesaurus', 'w3resource', 'finance', 'invest', 'coin', 'correlation', 'fourier']
-activity_keywords = {1:'python', 2:'Chrome', 3:'Microsoft Word', 4:'Microsoft Excel', 5:'PyCharm', 6:'Adobe Acrobat Reader'}
+misc_browser_keys = ['stat', 'panda', 'ipynb', 'science', 'udemy', 'algorithm', 'regression', 'data', 'machine', 'learning', 'stackoverflow', 'geeks', 'w3school', 'github', 'seaborn', 'matplotlib', 'kaggle', 'dev', 'kite', 'thesaurus', 'w3resource', 'finance', 'invest', 'coin', 'correlation', 'fourier', 'excel']
+browser_keys = ['linkedin','mail','youtube','search','instagram','cibc','bmo','royalbank','netflix','twitch']
+activity_keys = ['python','Chrome','Microsoft Word','Microsoft Excel','PyCharm','Adobe Acrobat Reader']
+
+# Search through datasets for keywords
+browser_df = pd.DataFrame(columns=browser_keys)
+misc_df = pd.DataFrame(columns=misc_browser_keys)
+activity_df = pd.DataFrame(columns=activity_keys)
+
+for i in range(len(browser_keys)):
+    keyword = str(browser_keys[i])
+    findings = []
+
+    for i in browser['url']:
+        url = str(i)
+
+        if url.find(keyword) != -1:
+            findings.append(1)
+        else:
+            findings.append(0)
+
+    browser_df[keyword] = findings
+
+for i in range(len(misc_browser_keys)):
+    keyword = str(misc_browser_keys[i])
+    findings = []
+
+    for i in browser['url']:
+        url = str(i)
+
+        if url.find(keyword) != -1:
+            findings.append(1)
+        else:
+            findings.append(0)
+
+    misc_df[keyword] = findings
+
+for i in range(len(activity_keys)):
+    keyword = str(activity_keys[i])
+    findings = []
+
+    for i in activity['AppName']:
+        app = str(i)
+
+        if app.find(keyword) != -1:
+            findings.append(1)
+        else:
+            findings.append(0)
+
+    activity_df[keyword] = findings
+
+# Sum results of keywords search
+self_improv = sum(misc_df.sum())
+browsing = browser_df.sum()
+browsing['Self Improvement'] = self_improv
+apps = activity_df.sum()
+
+# Generate plots
+fig = plt.figure(figsize=[30,20])
+plt.pie(np.squeeze(np.array(browsing)), labels=browsing.index, counterclock=False)
+plt.title('Weekly Browsing Breakdown')
+plt.show()
+
+fig = plt.figure(figsize=[30,20])
+plt.pie(np.squeeze(np.array(apps)), labels=apps.index, counterclock=False)
+plt.title('Weekly Laptop Activity Breakdown')
+plt.show()
