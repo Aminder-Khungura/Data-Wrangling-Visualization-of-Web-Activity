@@ -130,3 +130,13 @@ print('Weekly Self Improvement Score:',score)
 with open(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
     score_log_writer = csv.writer(score_log, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     score_log_writer.writerow([start_date, end_date, score])
+score_log.close()
+
+# Generate bar chart to view past Weekly Self Improvement Scores
+score_log = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv')
+
+x_coor = str(score_log['End Date'].values.tolist())
+height = score_log['Score']
+
+plt.bar(x_coor, height)
+plt.title('Weekly Self Improvement Score Log')
