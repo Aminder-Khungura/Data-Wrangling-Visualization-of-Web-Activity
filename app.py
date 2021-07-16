@@ -5,10 +5,9 @@ from main import main
 root = Tk()
 root.title('Productivity Tracker')
 
-# Set root widget size
-root.geometry('500x200')
-
-# Change icon of root widget
+# Customize root widget
+root.state('zoomed')
+root['bg'] = 'misty rose'
 photo = PhotoImage(file=r'C:\Users\amind\PycharmProjects\Productivity_Tracker\icon.png')
 root.iconphoto(False, photo)
 
@@ -27,7 +26,7 @@ start = start_input.get()
 end = end_input.get()
 
 # Create button widget that runs main.py
-run_button = Button(root, text='Run', command=lambda: main(start, end))
+run_button = Button(root, text='Run', command=lambda: main(start, end, root))
 
 # Place widgets onto root
 start_label.grid(row=0, column=0)
