@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 # Load browser history data then reformat
 browser_raw = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\BrowserHistory.csv')
@@ -105,6 +106,9 @@ self_improv = sum(misc_df.sum())
 browsing = browser_df.sum()
 browsing['Self Improvement'] = self_improv
 apps = activity_df.sum()
+browsing['finance'] = browsing['cibc'] + browsing['bmo'] + browsing['royalbank']
+browsing['streaming'] = browsing['netflix'] + browsing['twitch']
+browsing.drop(labels=['cibc', 'bmo', 'royalbank', 'netflix', 'twitch'], axis=0,inplace=True)
 
 # Generate plots
 fig = plt.figure(figsize=[30,20])
@@ -116,3 +120,13 @@ fig = plt.figure(figsize=[30,20])
 plt.pie(np.squeeze(np.array(apps)), labels=apps.index, counterclock=False)
 plt.title('Weekly Laptop Activity Breakdown')
 plt.show()
+
+# Calculate and print Weekly Self Improvement Score
+score = browsing['Self Improvement']/(browsing.sum() - browsing['youtube'] - browsing['linkedin'] - browsing['search'])
+score = '{0:.1g}'.format(score)
+print('Weekly Self Improvement Score:',score)
+
+# Add weekly result to historical results dataset
+with open(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
+    score_log_writer = csv.writer(score_log, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    score_log_writer.writerow([start_date, end_date, score])
