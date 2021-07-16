@@ -126,7 +126,7 @@ score = browsing['Self Improvement']/(browsing.sum() - browsing['youtube'] - bro
 score = '{0:.1g}'.format(score)
 print('Weekly Self Improvement Score:',score)
 
-# Add weekly result to historical results dataset
+# Add Weekly Self Improvement Score to historical dataset
 with open(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
     score_log_writer = csv.writer(score_log, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     score_log_writer.writerow([start_date, end_date, score])
