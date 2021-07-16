@@ -7,7 +7,7 @@ import csv
 
 def main(start, end):
     # Load browser history data then reformat
-    browser_raw = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\BrowserHistory.csv')
+    browser_raw = pd.read_csv(r'C:\Users\amind\PycharmProjects\Productivity_Tracker\Productivity_Tracker Data\BrowserHistory.csv')
     browser = browser_raw['Browser History'].str.split(' url:', expand=True)
     browser = browser[1].str.split('time_usec:', expand=True)
     browser.rename(columns={0:'url', 1:'time_usec'}, inplace=True)
@@ -15,7 +15,7 @@ def main(start, end):
     browser['time_usec'] = temporary[0]
 
     # Load laptop activity data then reformat
-    activity_raw = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\ProductAndServiceUsage.csv')
+    activity_raw = pd.read_csv(r'C:\Users\amind\PycharmProjects\Productivity_Tracker\Productivity_Tracker Data\ProductAndServiceUsage.csv')
     activity = activity_raw.drop(labels=['EndDateTime', 'DeviceId', 'Aggregation', 'AppPublisher'], axis=1)
     activity['DateTime'] = activity['DateTime'].str.split(' ', expand=True)
     activity_date_list = activity['DateTime'].values.tolist()
@@ -107,11 +107,11 @@ def main(start, end):
     browsing.drop(labels=['cibc', 'bmo', 'royalbank', 'netflix', 'twitch'], axis=0,inplace=True)
 
     # Generate plots
-    fig = plt.figure(figsize=[30,20])
+    fig = plt.figure(figsize=[8, 8])
     plt.pie(np.squeeze(np.array(browsing)), labels=browsing.index, counterclock=False)
     plt.title('Weekly Browsing Breakdown')
     plt.show()
-    fig = plt.figure(figsize=[30,20])
+    fig = plt.figure(figsize=[8, 8])
     plt.pie(np.squeeze(np.array(apps)), labels=apps.index, counterclock=False)
     plt.title('Weekly Laptop Activity Breakdown')
     plt.show()
@@ -122,15 +122,17 @@ def main(start, end):
     print('Weekly Self Improvement Score:',score)
 
     # Add Weekly Self Improvement Score to historical dataset
-    with open(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
+    with open(r'C:\Users\amind\PycharmProjects\Productivity_Tracker\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
         score_log_writer = csv.writer(score_log, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         score_log_writer.writerow([start_date, end_date, score])
     score_log.close()
 
     # Generate bar chart to view past Weekly Self Improvement Scores
-    score_log = pd.read_csv(r'C:\Users\amind\Google Drive\Files\Productivity_Tracker Data\Self Improvement Scores.csv')
+    score_log = pd.read_csv(r'C:\Users\amind\PycharmProjects\Productivity_Tracker\Productivity_Tracker Data\Self Improvement Scores.csv')
     x_coor = str(score_log['End Date'].values.tolist())
     height = score_log['Score']
+    fig = plt.figure(figsize=[8, 8])
     plt.bar(x_coor, height)
     plt.title('Weekly Self Improvement Score Log')
+    plt.show()
     return

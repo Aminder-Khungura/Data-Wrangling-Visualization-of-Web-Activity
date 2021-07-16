@@ -5,6 +5,9 @@ from main import main
 root = Tk()
 root.title('Productivity Tracker')
 
+# Set root widget size
+root.geometry('500x200')
+
 # Change icon of root widget
 photo = PhotoImage(file=r'C:\Users\amind\PycharmProjects\Productivity_Tracker\icon.png')
 root.iconphoto(False, photo)
@@ -14,16 +17,16 @@ start_label = Label(root, text='Enter Start Date:')
 end_label = Label(root, text='Enter End Date:')
 
 # Create widgets to input Start and End dates
-start_input = Entry(root, width=30, borderwidth=5)
+start_input = Entry(root, width=10, borderwidth=5)
 start_input.insert(0, '2021-07-01')
-end_input = Entry(root, width=30, borderwidth=5)
+end_input = Entry(root, width=10, borderwidth=5)
 end_input.insert(1, '2021-07-08')
 
-# Get dates entered ad store into variables
+# Get dates entered and store into variables
 start = start_input.get()
 end = end_input.get()
 
-# Create button widget
+# Create button widget that runs main.py
 run_button = Button(root, text='Run', command=lambda: main(start, end))
 
 # Place widgets onto root
