@@ -5,6 +5,10 @@ from main import main
 root = Tk()
 root.title('Productivity Tracker')
 
+# Change icon of root widget
+photo = PhotoImage(file=r'C:\Users\amind\PycharmProjects\Productivity_Tracker\icon.png')
+root.iconphoto(False, photo)
+
 # Create label widgets
 start_label = Label(root, text='Enter Start Date:')
 end_label = Label(root, text='Enter End Date:')
