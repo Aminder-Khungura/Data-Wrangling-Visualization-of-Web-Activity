@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import Label
 
 
 def main(start, end, root):
@@ -131,9 +132,12 @@ def main(start, end, root):
     canvasbar.draw()
     canvasbar.get_tk_widget().place(relx=0.775, rely=0.7, anchor='center')
 
-    # Calculate and print Weekly Self Improvement Score
+    # Calculate Weekly Self Improvement Score
     score = browsing['Self Improvement']/(browsing.sum() - browsing['youtube'] - browsing['linkedin'] - browsing['search'])
     score = '{0:.1g}'.format(score)
+    text = '\n\n\nWeekly Self Improvement Score: ' + str(score)
+    score_label = Label(root, fg='Darkgrey', bg='misty rose', text=text, font='Helvetica 25 bold')
+    score_label.grid(row=3, column=2)
 
     # Add Weekly Self Improvement Score to historical dataset
     with open(r'C:\Users\amind\PycharmProjects\Productivity_Tracker\Productivity_Tracker Data\Self Improvement Scores.csv', mode='a') as score_log:
@@ -154,3 +158,4 @@ def main(start, end, root):
     canvasbar.draw()
     canvasbar.get_tk_widget().place(relx=0.285, rely=0.6, anchor='center')
     return
+
